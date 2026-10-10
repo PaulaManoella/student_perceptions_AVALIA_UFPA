@@ -38,7 +38,6 @@ Comentários: "{docs_str}"
 
 Rótulo: """
 
-
 # English translation of the prompt used above 
 
 # """<|start_header_id|>system<|end_header_id|>
@@ -69,7 +68,7 @@ def run_labeling() -> None:
     Main function to execute the automatic LLM labeling over BERTopic clusters.
     """
     # Load previously generated BERTopic topics
-    df_bertopic = pd.read_pickle('src/tmp/df_bertopic_topics.pkl')
+    df_bertopic = pd.read_pickle('src/data/df_bertopic_topics.pkl')
 
     labels = []
 
@@ -85,8 +84,6 @@ def run_labeling() -> None:
     for topic_idx, row in enumerate(df_bertopic.itertuples()):
         keywords_list = row[1]
         docs_list = row[2]
-
-        print(f'topic: {keywords_list}\n\ndocs: {docs_list}\n======\n\n')
 
         # Convert lists to strings for prompt formatting
         keywords_str = ", ".join(keywords_list)
@@ -104,7 +101,7 @@ def run_labeling() -> None:
             max_tokens=50,
             stop=["<|eot_id|>", "Exemplos:"],
             temperature=0.1,
-            top_p=0.9,
+            top_p=0.7,
             echo=False
         )
 
@@ -122,7 +119,7 @@ def run_labeling() -> None:
     df_bertopic['llm_label'] = labels
     
     # Save to a CSV file containing only the requested columns
-    df_bertopic[['llm_label', 'keywords']].to_csv('src/tmp/bertopic_llm_labels.csv', index=False, encoding='utf-8-sig')
+    df_bertopic[['llm_label', 'keywords']].to_csv('output/topic_modeling/bertopic_llm_labels.csv', index=False, encoding='utf-8-sig')
 
     print("\n✅ LLM labeling execution completed successfully and saved to CSV!\n")
 
