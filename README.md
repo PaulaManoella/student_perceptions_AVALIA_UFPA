@@ -1,10 +1,10 @@
-# Analyzing Student Perceptions in Course Evaluation: A Hybrid Approach Using Topic Modeling and LLM-Based Automatic Labeling
+# Student Perception in AVALIA UFPA: A Hybrid Approach Using Topic Modeling and LLM-Based Automatic Labeling
 
-This repository contains the source code and supplementary materials for the research paper submitted to the **Brazilian Conference on Intelligent Systems (BRACIS)**. The study applies multiple topic modeling algorithms to qualitative student feedback integrated with large language model (LLM) based automatic labeling.
+This repository contains the source code and supplementary materials for the research paper submitted to the **Encontro Nacional de Inteligência Artificial e Computacional (ENIAC).** The study applies multiple topic modeling algorithms to qualitative student feedback integrated with large language model (LLM) based automatic labeling.
 
 ## Overview
 
-The goal of this project is to identify and analyze the latent thematic structures within student perceptions. We employ four topic modeling algorithms — **LSA**, **LDA**, **NMF**, and **BERTopic** — and conduct a qualitative inter-model comparative analysis to identify both cross-model recurring themes and model-specific exclusive clusters. Additionally, we leverage the **Llama 3.1 LLM** for automatic generative topic labeling.
+The goal of this project is to identify and analyze the latent thematic structures within student perceptions. We employ four topic modeling algorithms, **LSA**, **LDA**, **NMF**, and **BERTopic** and conduct a qualitative inter-model comparative analysis to identify both cross-model recurring themes and model-specific exclusive clusters. Additionally, we leverage the **Llama 3.1 LLM** for automatic generative topic labeling.
 
 ## Results and Discussion Notebook
 
@@ -18,6 +18,10 @@ This notebook serves as a self-contained technical report that consolidates all 
 - **Topic keyword tables** for each of the four models (LSA, LDA, NMF, BERTopic).
 - **Qualitative inter-model comparative analysis**, featuring common topics identified via Louvain community detection and model-exclusive clusters.
 - **Automatic generative topic labels** produced by the Llama 3.1 LLM for the BERTopic results.
+
+## Full paper
+
+You can read the complete article directly in the repository by accessing [student_perception_paper.pdf](./student_perception_paper.pdf).
 
 ## Project Structure
 
@@ -50,7 +54,7 @@ student_perceptions_analysis_BRACIS/
 │   ├── evaluation.py                  # Coherence, IRBO, cosine similarity, and Louvain
 │   ├── preprocessing.py               # Text preprocessing and cleaning
 │   ├── selection.py                   # Data filtering 
-│   ├── transformation.py             # BoW, TF-IDF, dictionary construction
+│   ├── transformation.py              # BoW, TF-IDF, dictionary construction
 │   └── utils.py                       # Utility functions 
 ├── main.py                            # Main pipeline: preprocessing → topic modeling
 ├── coherence_irbo_evaluation.py       # Coherence and IRBO evaluation
@@ -59,6 +63,7 @@ student_perceptions_analysis_BRACIS/
 ├── pyproject.toml                     # Project dependencies
 ├── poetry.lock                        # Locked dependency versions
 └── README.md
+└── student_perception_paper.pdf       # Full paper
 ```
 
 ## Pipeline Stages
@@ -68,13 +73,14 @@ The analysis is organized into four sequential pipeline stages:
 ### 1. Coherence & IRBO Evaluation (`coherence_irbo_evaluation.py`)
 
 Evaluates each model across a range of $k$ values ($2 \leq k \leq 25$) using:
+
 - **Coherence (Cv):** Measures the semantic interpretability of discovered topics.
 - **IRBO (Inverted Rank-Biased Overlap):** Measures topic diversity across the model's output.
-
 
 ### 2. Topic Modeling (`main.py`)
 
 Executes the full data processing and topic modeling pipeline:
+
 - Loads and filters the raw dataset.
 - Applies text preprocessing.
 - Generates text vector representations.
@@ -84,10 +90,10 @@ Executes the full data processing and topic modeling pipeline:
   - **NMF** ($k = 13$)
   - **BERTopic** ($k = 14$)
 
-
 ### 3. Inter-model Alignment (`inter-model_alignment.py`)
 
 Performs a qualitative cross-model analysis:
+
 - Generates topic vector embeddings using a Portuguese sentence-transformer model (PORTULAN/serafim).
 - Computes pairwise cosine similarity across all topics from all models.
 - Generates a non-directed graph where nodes are topics and edges are cosine similarities.
@@ -96,6 +102,7 @@ Performs a qualitative cross-model analysis:
 ### 4. Automatic Topic Labeling (`LLM_labeling.py`)
 
 Generates concise, descriptive labels for BERTopic clusters using a local **Llama 3.1 8B** model:
+
 - Processes each topic's keywords and representative documents.
 - Produces short labels capturing the theme of each topic.
 
@@ -132,48 +139,49 @@ Label: """
 
 ### Key Dependencies
 
-| Package | Purpose |
-|---------|---------|
-| `pandas` | Data manipulation |
-| `nltk`, `spacy` | NLP preprocessing |
-| `gensim` | LSA, LDA, and coherence evaluation |
-| `scikit-learn` | NMF and TF-IDF |
-| `bertopic` | Neural topic modeling |
-| `sentence-transformers` | Text embeddings |
-| `umap-learn` | Dimensionality reduction |
-| `llama-cpp-python` | Local LLM inference |
-| `python-louvain` | Community detection |
-| `rbo` | Rank-biased overlap metric |
-| `matplotlib`, `seaborn` | Visualization |
+| Package                     | Purpose                            |
+| --------------------------- | ---------------------------------- |
+| `pandas`                  | Data manipulation                  |
+| `nltk`, `spacy`         | NLP preprocessing                  |
+| `gensim`                  | LSA, LDA, and coherence evaluation |
+| `scikit-learn`            | NMF and TF-IDF                     |
+| `bertopic`                | Neural topic modeling              |
+| `sentence-transformers`   | Text embeddings                    |
+| `umap-learn`              | Dimensionality reduction           |
+| `llama-cpp-python`        | Local LLM inference                |
+| `python-louvain`          | Community detection                |
+| `rbo`                     | Rank-biased overlap metric         |
+| `matplotlib`, `seaborn` | Visualization                      |
 
 ## Getting Started
 
 1. **Install dependencies:**
+
    ```bash
    poetry install
    ```
-
 2. **Run the topic modeling pipeline:**
+
    ```bash
    poetry run python main.py
    ```
-
 3. **Run the coherence and IRBO evaluation:**
+
    ```bash
    poetry run python coherence_irbo_evaluation.py
    ```
-
 4. **Run the inter-model alignment:**
+
    ```bash
    poetry run python inter-model_alignment.py
    ```
-
 5. **Run the LLM labeling** (requires the Llama 3.1 model file):
+
    ```bash
    poetry run python LLM_labeling.py
    ```
-
 6. **View the results notebook:**
+
    ```bash
    poetry run jupyter notebook notebook/results_and_discussion.ipynb
    ```
